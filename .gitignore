@@ -6,6 +6,7 @@ out/
 target/
 *.jar
 *.iml
+.idea
 
 ### Eclipse ###
 .apt_generated
