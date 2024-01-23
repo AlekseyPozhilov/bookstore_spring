@@ -5,12 +5,14 @@ import com.belhard.bookstore.dto.user.CreateUserDto;
 import com.belhard.bookstore.dto.user.UserDto;
 import com.belhard.bookstore.entity.User;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
+@Service
 public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 

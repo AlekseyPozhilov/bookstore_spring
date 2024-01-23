@@ -1,11 +1,11 @@
 package com.belhard.bookstore.controller.create.book;
 
-import com.belhard.bookstore.controller.Controller;
+import com.belhard.bookstore.controller.Command;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 
-@RequiredArgsConstructor
-public class CreateBookFormController implements Controller {
+@Controller("create_book_form")
+public class CreateBookFormCommand implements Command {
     public String execute(HttpServletRequest req) {
         return "jsp/book/createBookForm.jsp";
     }

@@ -12,41 +12,46 @@ import java.io.IOException;
 @Log4j2
 @WebServlet("/bookstore")
 public class FrontController extends HttpServlet {
-    private ControllerFactory controllerFactory;
+    public static final String PATH = "bookstore?command=";
+    public static final String REDIRECT = "redirect:";
 
     @Override
     public void init() {
         log.info("Init called");
-        controllerFactory = new ControllerFactory();
         log.info("Init completed");
     }
 
     @Override
     public void destroy() {
         log.info("Destroy called");
-        controllerFactory.close();
         log.info("Destroy completed");
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
         process(req, resp);
     }
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         process(req, resp);
     }
 
-    private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void process(HttpServletRequest req, HttpServletResponse resp) {
         String page;
         try {
             String command = req.getParameter("command");
-            Controller controller = ControllerFactory.INSTANCE.get(command);
+            Command controller = AppListener.getContext().getBean(command, Command.class);
             page = controller.execute(req);
-        } catch (Exception e) {
+
+            if (page.startsWith(REDIRECT)) {
+                resp.sendRedirect(req.getContextPath() + "/" + page.substring(REDIRECT.length()));
+            } else {
+                req.getRequestDispatcher(page).forward(req, resp);
+            }
+        } catch (IOException | ServletException e) {
             log.error(e.getMessage(), e);
-            page = ControllerFactory.INSTANCE.get("error").execute(req);
+            Command command = AppListener.getContext().getBean("error", Command.class);
+            command.execute(req);
         }
-        req.getRequestDispatcher(page).forward(req, resp);
     }
 }

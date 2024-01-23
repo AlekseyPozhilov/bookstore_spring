@@ -5,12 +5,14 @@ import com.belhard.bookstore.dto.book.BookDto;
 import com.belhard.bookstore.dto.book.CreateBookDto;
 import com.belhard.bookstore.entity.Book;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
+@Service
 public class BookServiceImpl implements BookService {
     private final BookDao bookDao;
 

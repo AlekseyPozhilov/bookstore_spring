@@ -3,6 +3,7 @@ package com.belhard.bookstore.dao.book;
 import com.belhard.bookstore.connection.DataSource;
 import com.belhard.bookstore.entity.Book;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
+@Repository
 public class BookDaoImpl implements BookDao {
     public static final String SELECT_ISBN_QUERY = "SELECT id, author, numberOfPages, price, yearOfPublishing, title FROM books";
     public static final String SELECT_ID_QUERY = "SELECT id, author, isbn, numberOfPages, price, yearOfPublishing, title FROM books WHERE id = ?";

@@ -1,27 +1,25 @@
 package com.belhard.bookstore.controller.create.book;
 
-import com.belhard.bookstore.controller.Controller;
+import com.belhard.bookstore.controller.Command;
+import com.belhard.bookstore.controller.FrontController;
 import com.belhard.bookstore.dto.book.BookDto;
 import com.belhard.bookstore.dto.book.CreateBookDto;
 import com.belhard.bookstore.service.book.BookService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 
 import java.math.BigDecimal;
 
 @RequiredArgsConstructor
-public class CreateBookController implements Controller {
+@Controller("create_book")
+public class CreateBookCommand implements Command {
     private final BookService bookService;
     public String execute(HttpServletRequest req) {
         CreateBookDto toSave = processRequest(req);
         BookDto saved = bookService.create(toSave);
-        setRequestAttributes(req, saved);
 
-        return "jsp/book/book.jsp";
-    }
-
-    private static void setRequestAttributes(HttpServletRequest req, BookDto saved) {
-        req.setAttribute("book", saved);
+        return FrontController.REDIRECT + FrontController.PATH + "book&id=" + saved.getId();
     }
 
     private static CreateBookDto processRequest(HttpServletRequest req) {

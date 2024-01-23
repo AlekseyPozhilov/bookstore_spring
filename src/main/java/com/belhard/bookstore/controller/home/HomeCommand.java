@@ -1,9 +1,11 @@
 package com.belhard.bookstore.controller.home;
 
-import com.belhard.bookstore.controller.Controller;
+import com.belhard.bookstore.controller.Command;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.stereotype.Controller;
 
-public class HomeController implements Controller {
+@Controller("home")
+public class HomeCommand implements Command {
     public String execute(HttpServletRequest req) {
         return "jsp/index.jsp";
     }
