@@ -1,40 +1,41 @@
 package com.belhard.bookstore.dao.user;
 
-import com.belhard.bookstore.connection.DataSource;
 import com.belhard.bookstore.entity.User;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.sql.Statement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Log4j2
+@RequiredArgsConstructor
 @Repository
 public class UserDaoImpl implements UserDao {
     public static final String INSERT_QUERY = "INSERT INTO users (firstName, lastName, email, dateOfBirth, gender, phoneNumber, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
     public static final String SELECT_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users WHERE id = ?";
-    public static final String UPDATE_QUERY = "UPDATE users SET firstName = ?, lastName = ?, email = ?, dateOfBirth = ?, gender = ?, phoneNumber = ?, password = ? WHERE id = ?";
     public static final String DELETE_QUERY = "DELETE FROM users WHERE id = ?";
-    public static final String COUNT_QUERY = "SELECT COUNT(*) FROM users";
     public static final String SELECT_BY_EMAIL_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users WHERE email = ?";
-    public static final String SELECT_BY_LASTNAME_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users WHERE lastName = ?";
     public static final String SELECT_ALL_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users";
-    private DataSource dataSource;
-
-    public UserDaoImpl(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+    private static final String UPDATE_NAMED_SCRIPT = "UPDATE users SET firstName = :firstName, lastName = :lastName, email = :email, dateOfBirth = :dateOfBirth, gender = :gender, phoneNumber = :phoneNumber, password = :password WHERE id = :id";
+    private final JdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
     public User create(User user) {
-        try (Connection connection = dataSource.getConnection()) {
-            log.debug("Creating user", user);
-
-            PreparedStatement statement = connection.prepareStatement(INSERT_QUERY);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+            PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, user.getFirstName());
             statement.setString(2, user.getLastName());
             statement.setString(3, user.getEmail());
@@ -42,184 +43,63 @@ public class UserDaoImpl implements UserDao {
             statement.setString(5, user.getGender());
             statement.setString(6, user.getPhoneNumber());
             statement.setString(7, user.getPassword());
-
-            statement.executeUpdate();
-
-            log.debug("User created");
-        } catch (SQLException e) {
-            log.error("Failed to create user: {}", user, e);
-            throw new RuntimeException(e);
-        }
-        return user;
+            return statement;
+        }, keyHolder);
+        Map<String, Object> keys = keyHolder.getKeys();
+        long id = (long) keys.get("id");
+        return read(id);
     }
 
     @Override
     public User read(Long id) {
-        try (Connection connection = dataSource.getConnection()) {
-            log.debug("Reading user", id);
-            PreparedStatement statement = connection.prepareStatement(SELECT_QUERY);
-            statement.setLong(1, id);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return extractUserFromResultSet(resultSet);
-                }
-                log.debug("User has been read");
-            } catch (SQLException e) {
-                log.error("Failed to read user: {}", id, e);
-                throw new RuntimeException(e);
-            }
-
-        } catch (SQLException e) {
-            log.error("Failed to read user: {}", id, e);
-            throw new RuntimeException(e);
-        }
-        return null;
+        return jdbcTemplate.queryForObject(SELECT_QUERY, this::mapRow, id);
     }
 
     @Override
-    public void update(User user) {
-        try (Connection connection = dataSource.getConnection()) {
-            log.debug("Updating user", user);
-            PreparedStatement statement = connection.prepareStatement(UPDATE_QUERY);
-            statement.setString(1, user.getFirstName());
-            statement.setString(2, user.getLastName());
-            statement.setString(3, user.getEmail());
-            statement.setString(4, user.getDateOfBirth());
-            statement.setString(5, user.getGender());
-            statement.setString(6, user.getPhoneNumber());
-            statement.setString(7, user.getPassword());
-            statement.setLong(8, user.getId());
-            statement.executeUpdate();
-
-            log.debug("User updated");
-        } catch (SQLException e) {
-            log.error("Failed to update user: {}", user, e);
-            throw new RuntimeException();
-        }
+    public User update(User user) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("id", user.getId());
+        parameters.put("firstName", user.getFirstName());
+        parameters.put("lastName", user.getLastName());
+        parameters.put("email", user.getEmail());
+        parameters.put("dateOfBirth", user.getDateOfBirth());
+        parameters.put("gender", user.getGender());
+        parameters.put("phoneNumber", user.getPhoneNumber());
+        parameters.put("password", user.getPassword());
+        namedParameterJdbcTemplate.update(UPDATE_NAMED_SCRIPT, parameters);
+        return read(user.getId());
     }
 
     @Override
-    public User delete(Long id) {
-        try (Connection connection = dataSource.getConnection()) {
-            log.debug("Deleting user", id);
-            PreparedStatement statement = connection.prepareStatement(DELETE_QUERY);
-            statement.setLong(1, id);
-            statement.executeUpdate();
-            log.debug("User deleted");
-        } catch (SQLException e) {
-            log.error("Failed to delete user: {}", id, e);
-            throw new RuntimeException(e);
-        }
-
-        return null;
+    public boolean delete(Long id) {
+        int rowsUpdated = jdbcTemplate.update(DELETE_QUERY, id);
+        return rowsUpdated == 1;
     }
 
     @Override
     public User findByEmail(String email) {
-        try (Connection connection = dataSource.getConnection()) {
-            log.debug("Fetching user by email: {}", email);
-
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_EMAIL_QUERY);
-            statement.setString(1, email);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return extractUserFromResultSet(resultSet);
-                }
-                log.debug("User received");
-            }
-        } catch (SQLException e) {
-            log.error("Failed to find user: {}", email, e);
-            throw new RuntimeException(e);
-        }
-
-        return null;
-    }
-
-    @Override
-    public List<User> findByLastName(String lastName) {
-        List<User> userList = new ArrayList<>();
-        try (Connection connection = dataSource.getConnection()) {
-            log.debug("Fetching user by lastName: {}", lastName);
-
-            PreparedStatement statement = connection.prepareStatement(SELECT_BY_LASTNAME_QUERY);
-            statement.setString(1, lastName);
-
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    User user = extractUserFromResultSet(resultSet);
-                    userList.add(user);
-                }
-                log.debug("User received");
-            }
-        } catch (SQLException e) {
-            log.error("Failed to find user: {}", lastName, e);
-            throw new RuntimeException(e);
-        }
-
-        return userList;
-    }
-
-    @Override
-    public long countAll() {
-        try (Connection connection = dataSource.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(COUNT_QUERY);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return resultSet.getLong(1);
-            }
-        } catch (SQLException e){
-            log.error("ERROR");
-            throw new RuntimeException(e);
-        }
-        return 0;
-    }
-
-    private User extractUserFromResultSet(ResultSet resultSet) {
-        try {
-            Long id = resultSet.getLong("id");
-            String firstName = resultSet.getString("firstName");
-            String lastName = resultSet.getString("lastName");
-            String email = resultSet.getString("email");
-            String dateOfBirth = resultSet.getString("dateOfBirth");
-            String gender = resultSet.getString("gender");
-            String phoneNumber = resultSet.getString("phoneNumber");
-            String password = resultSet.getString("password");
-
-            User user = new User();
-            user.setId(id);
-            user.setFirstName(firstName);
-            user.setLastName(lastName);
-            user.setEmail(email);
-            user.setDateOfBirth(dateOfBirth);
-            user.setGender(gender);
-            user.setPhoneNumber(phoneNumber);
-            user.setPassword(password);
-
-            return user;
-        } catch (SQLException e) {
-            log.error("ERROR");
-            throw new RuntimeException(e);
-        }
+        return jdbcTemplate.queryForObject(SELECT_BY_EMAIL_QUERY, this::mapRow, email);
     }
 
     @Override
     public List<User> getAll() throws SQLException {
-        List<User> users = new ArrayList<>();
-
-        try (Connection connection = dataSource.getConnection()) {
-            log.debug("Get all users");
-            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_QUERY);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                User user = extractUserFromResultSet(resultSet);
-                users.add(user);
-                System.out.printf("user {id = %d, firstName = %s, lastName = %s, email = %s, dateOfBirth = %s, gender = %s, phoneNumber = %s, password = %s}%n", user.getId(), user.getFirstName(), user.getLastName(), user.getEmail(), user.getDateOfBirth(), user.getGender(), user.getPhoneNumber(), user.getPassword());
-            }
-            log.debug("All users received");
-        } catch (SQLException e) {
-            log.error("Failed to find users", e);
-            throw new RuntimeException(e);
+        try {
+            return jdbcTemplate.query(SELECT_ALL_QUERY, this::mapRow);
+        } catch (DataAccessException e) {
+            return null;
         }
-        return users;
+    }
+
+    private User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        User user = new User();
+        user.setId(resultSet.getLong("id"));
+        user.setFirstName(resultSet.getString("firstName"));
+        user.setLastName(resultSet.getString("lastName"));
+        user.setEmail(resultSet.getString("email"));
+        user.setDateOfBirth(resultSet.getString("dateOfBirth"));
+        user.setGender(resultSet.getString("gender"));
+        user.setPhoneNumber(resultSet.getString("phoneNumber"));
+        user.setPassword(resultSet.getString("password"));
+        return user;
     }
 }

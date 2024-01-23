@@ -144,29 +144,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findByLastName(String lastName) {
-        try {
-            log.debug("Fetching user by lastName: {}", lastName);
-            List<User> userEntities = userDao.findByLastName(lastName);
-
-            List<UserDto> dtos = new ArrayList<>();
-
-            for (User userEntity : userEntities) {
-                UserDto dto = userReadDto(userEntity);
-
-                dtos.add(dto);
-            }
-
-            log.debug("User received");
-
-            return dtos;
-        } catch (SQLException e) {
-            log.error("Failed to find user: {}", lastName, e);
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
     public UserDto findById(Long id) {
         try {
             log.debug("Fetching user by ID: {}", id);

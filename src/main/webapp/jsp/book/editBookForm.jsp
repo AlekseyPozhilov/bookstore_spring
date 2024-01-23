@@ -25,7 +25,7 @@
          <label for = "yearOfPublishing-input">yearOfPublishing:</label>
          <input id = "yearOfPublishing-input" name = "yearOfPublishing" type = "number" value = "${requestScope.book.yearOfPublishing}" required/>
         <br/>
-        <input type="submit" value="SAVE">
+        <input type="submit" value="Save">
     </form>
 </body>
 </html>

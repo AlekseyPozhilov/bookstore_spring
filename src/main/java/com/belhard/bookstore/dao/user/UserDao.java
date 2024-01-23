@@ -10,15 +10,11 @@ public interface UserDao {
 
     User read(Long id) throws SQLException;
 
-    void update(User user) throws SQLException;
+    User update(User user) throws SQLException;
 
-    User delete(Long id) throws SQLException;
+    boolean delete(Long id) throws SQLException;
 
     User findByEmail(String email) throws SQLException;
-
-    List<User> findByLastName(String lastName) throws SQLException;
-
-    long countAll() throws SQLException;
 
     List<User> getAll() throws SQLException;
 }
