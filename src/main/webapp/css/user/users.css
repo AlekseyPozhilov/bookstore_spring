@@ -62,6 +62,7 @@ input[type="submit"]:active {
         padding: 0;
         display: flex;
         justify-content: space-around;
+        text-align: center; /* Изменено на text-align */
         background-color: #f5f5f5;
     }
 

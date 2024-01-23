@@ -2,6 +2,7 @@ package com.belhard.bookstore.connection;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.sql.Array;
 import java.sql.Blob;

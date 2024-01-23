@@ -3,7 +3,6 @@ package com.belhard.bookstore.dto.book;
 import lombok.Data;
 
 import java.math.BigDecimal;
-
 @Data
 public class BookDto {
     private Long id;
