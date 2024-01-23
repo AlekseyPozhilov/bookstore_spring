@@ -3,6 +3,7 @@ package com.belhard.bookstore.dao.user;
 import com.belhard.bookstore.connection.DataSource;
 import com.belhard.bookstore.entity.User;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
+@Repository
 public class UserDaoImpl implements UserDao {
     public static final String INSERT_QUERY = "INSERT INTO users (firstName, lastName, email, dateOfBirth, gender, phoneNumber, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
     public static final String SELECT_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users WHERE id = ?";

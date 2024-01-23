@@ -1,36 +1,48 @@
 package com.belhard.bookstore.connection;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 
+import javax.annotation.PostConstruct;
+import java.io.Closeable;
 import java.sql.Connection;
 
 @Log4j2
-public class DataSourceImpl implements DataSource {
-    private final String url;
-    private final String user;
-    private final String password;
-    private final String drv;
+@Component
+public class DataSourceImpl implements DataSource, Closeable {
+    @Value("${my.app.db.${my.app.profile}.url}")
+    private String url;
+
+    @Value("${my.app.db.${my.app.profile}.user}")
+    private String user;
+
+    @Value("${my.app.db.${my.app.profile}.password}")
+    private String password;
+
+    @Value("${my.app.db.${my.app.profile}.drv}")
+    private String drv;
+
+    @Value("${my.app.db.${my.app.profile}.poolSize}")
     private int pooolSize;
+
     private ConnectionPool connectionPool;
 
-    public DataSourceImpl(String url, String user, String password, String drv, int poolSize) {
-        this.url = url;
-        this.user = user;
-        this.password = password;
-        this.drv = drv;
-        connectionPool = new ConnectionPool(url, user, password, drv, poolSize);
+    @PostConstruct
+    public void init() {
+        connectionPool = new ConnectionPool(url, user, password, drv, pooolSize);
     }
 
     public Connection getConnection() {
         try {
             log.info("Connection to the database is being established...");
             Class.forName("org.postgresql.Driver");
-            if (connectionPool == null){
+            if (connectionPool == null) {
                 connectionPool = new ConnectionPool(url, user, password, drv, pooolSize);
             }
             return connectionPool.getConnection();
-        }  catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             log.error("Error with connection");
             throw new RuntimeException(e);
         }

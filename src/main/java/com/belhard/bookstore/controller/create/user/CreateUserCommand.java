@@ -1,27 +1,25 @@
 package com.belhard.bookstore.controller.create.user;
 
-import com.belhard.bookstore.controller.Controller;
+import com.belhard.bookstore.controller.Command;
+import com.belhard.bookstore.controller.FrontController;
 import com.belhard.bookstore.dto.user.CreateUserDto;
 import com.belhard.bookstore.dto.user.UserDto;
 import com.belhard.bookstore.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Controller;
 
 @Log4j2
 @RequiredArgsConstructor
-public class CreateUserController implements Controller {
+@Controller("create_user")
+public class CreateUserCommand implements Command {
     private final UserService userService;
     public String execute(HttpServletRequest req) {
         CreateUserDto toSave = processRequest(req);
         UserDto saved = userService.create(toSave);
-        setRequestAttributes(req, saved);
 
-        return "jsp/user/user.jsp";
-    }
-
-    private static void setRequestAttributes(HttpServletRequest req, UserDto saved) {
-        req.setAttribute("user", saved);
+        return FrontController.REDIRECT + FrontController.PATH + "user&id=" + saved.getId();
     }
 
     private static CreateUserDto processRequest(HttpServletRequest req) {

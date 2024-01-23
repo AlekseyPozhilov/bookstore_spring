@@ -1,6 +1,7 @@
 package com.belhard.bookstore.dto.user;
 
 import lombok.Data;
+
 @Data
 public class UserDto {
     private Long id;

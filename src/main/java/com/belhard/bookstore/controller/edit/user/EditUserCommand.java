@@ -1,25 +1,24 @@
 package com.belhard.bookstore.controller.edit.user;
 
-import com.belhard.bookstore.controller.Controller;
+import com.belhard.bookstore.controller.Command;
+import com.belhard.bookstore.controller.FrontController;
 import com.belhard.bookstore.dto.user.UserDto;
 import com.belhard.bookstore.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 
 @RequiredArgsConstructor
-public class EditUserController implements Controller {
+@Controller("edit_user")
+public class EditUserCommand implements Command {
     private final UserService userService;
 
     @Override
     public String execute(HttpServletRequest req) {
         UserDto toEdit = processRequest(req);
         UserDto edited = userService.update(toEdit);
-        setRequestAttributes(req, edited);
-        return "jsp/user/user.jsp";
-    }
 
-    private static void setRequestAttributes(HttpServletRequest req, UserDto edited) {
-        req.setAttribute("user", edited);
+        return FrontController.REDIRECT + FrontController.PATH + "user&id=" + edited.getId();
     }
 
     private static UserDto processRequest(HttpServletRequest req){
