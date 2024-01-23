@@ -95,34 +95,6 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    public List<BookDto> findByAuthor(String author) {
-        List<BookDto> dtos = new ArrayList<>();
-        try {
-            log.debug("Fetching book by author: {}", author);
-
-            List<Book> bookEntities = bookDao.findByAuthor(author);
-
-            for (Book bookEntity : bookEntities) {
-                BookDto dto = new BookDto();
-                dto.setId(bookEntity.getId());
-                dto.setAuthor(bookEntity.getAuthor());
-                dto.setIsbn(bookEntity.getIsbn());
-                dto.setNumberOfPages(bookEntity.getNumberOfPages());
-                dto.setPrice(bookEntity.getPrice());
-                dto.setYearOfPublishing(bookEntity.getYearOfPublishing());
-                dto.setTitle(bookEntity.getTitle());
-                dtos.add(dto);
-            }
-
-            log.debug("Book received");
-
-            return dtos;
-        } catch (SQLException e) {
-            log.error("Failed to find book: {}", author, e);
-            throw new RuntimeException(e);
-        }
-    }
-
     @Override
     public BookDto create(CreateBookDto dto) {
         try {
