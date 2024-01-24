@@ -1,6 +1,6 @@
 package com.belhard.bookstore.dao.book;
 
-import com.belhard.bookstore.entity.Book;
+import com.belhard.bookstore.dto.book.BookDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataAccessException;
@@ -31,7 +31,7 @@ public class BookDaoImpl implements BookDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public Book create(Book book) {
+    public BookDto create(BookDto book) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS);
@@ -48,7 +48,7 @@ public class BookDaoImpl implements BookDao {
         return findById(id);
     }
 
-    public Book update(Book book) {
+    public BookDto update(BookDto book) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", book.getId());
         parameters.put("title", book.getTitle());
@@ -61,13 +61,13 @@ public class BookDaoImpl implements BookDao {
         return findById(book.getId());
     }
 
-    public boolean delete(int id) {
+    public boolean delete(Long id) {
         int rowsUpdated = jdbcTemplate.update(DELETE_QUERY, id);
         return rowsUpdated == 1;
 
     }
 
-    public List<Book> getAll() {
+    public List<BookDto> getAll() {
         try {
             return jdbcTemplate.query(SELECT_TABLE_QUERY, this::mapRow);
         } catch (DataAccessException e) {
@@ -78,18 +78,18 @@ public class BookDaoImpl implements BookDao {
 
 
     @Override
-    public Book findById(Long id) {
+    public BookDto findById(Long id) {
         return jdbcTemplate.queryForObject(SELECT_ID_QUERY, this::mapRow, id);
 
     }
 
-    public Book findByIsbn(String isbn) {
+    public BookDto findByIsbn(String isbn) {
         return jdbcTemplate.queryForObject(SELECT_ISBN_QUERY, this::mapRow, isbn);
 
     }
 
-    private Book mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        Book book = new Book();
+    private BookDto mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        BookDto book = new BookDto();
         book.setId(resultSet.getLong("id"));
         book.setAuthor(resultSet.getString("author"));
         book.setIsbn(resultSet.getString("isbn"));
