@@ -12,5 +12,4 @@ public class OrderInfoDto {
     private Book book;
     private Integer bookQuantity;
     private BigDecimal bookPrice;
-
 }
