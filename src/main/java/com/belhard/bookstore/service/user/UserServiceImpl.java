@@ -22,44 +22,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findAll() {
-        try {
-            log.debug("Fetching all users");
-            List<User> users = userDao.getAll();
-            List<UserDto> userDtos = new ArrayList<>();
+        log.debug("Fetching all users");
+        List<UserDto> users = userDao.getAll();
+        List<UserDto> userDtos = new ArrayList<>();
 
-            for (User user : users) {
-                UserDto userDto = userReadDto(user);
+        for (UserDto user : users) {
+            UserDto userDto = userReadDto(user);
 
-                userDtos.add(userDto);
-            }
-
-            log.debug("All users received");
-
-            return userDtos;
-        } catch (SQLException e) {
-            log.error("Failed to find users", e);
-            throw new RuntimeException(e);
+            userDtos.add(userDto);
         }
+
+        log.debug("All users received");
+
+        return userDtos;
     }
 
     @Override
     public UserDto create(CreateUserDto dto) {
-        try {
-            log.debug("Creating user: {}", dto);
-            User user = toEntity(dto);
-            User created = userDao.create(user);
+        log.debug("Creating user: {}", dto);
+        UserDto user = toEntity(dto);
+        UserDto created = userDao.create(user);
 
-            log.debug("User created: {}", user);
+        log.debug("User created: {}", user);
 
-            return userReadDto(created);
-        } catch (SQLException e) {
-            log.error("Failed to create user: {}", dto, e);
-            throw new RuntimeException(e);
-        }
+        return userReadDto(created);
     }
 
-    private static User toEntity(CreateUserDto dto) {
-        User userEntity = new User();
+    private static UserDto toEntity(CreateUserDto dto) {
+        UserDto userEntity = new UserDto();
         userEntity.setFirstName(dto.getFirstName());
         userEntity.setLastName(dto.getLastName());
         userEntity.setEmail(dto.getEmail());
@@ -72,65 +62,50 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto update(UserDto dto) {
-        try {
-            log.debug("Updating user: {}", dto);
-            User userEntity = new User();
-            userEntity.setId(dto.getId());
-            userEntity.setFirstName(dto.getFirstName());
-            userEntity.setLastName(dto.getLastName());
-            userEntity.setEmail(dto.getEmail());
-            userEntity.setDateOfBirth(dto.getDateOfBirth());
-            userEntity.setGender(dto.getGender());
-            userEntity.setPhoneNumber(dto.getPhoneNumber());
-            userEntity.setPassword(dto.getPassword());
+        log.debug("Updating user: {}", dto);
+        UserDto userEntity = new UserDto();
+        userEntity.setId(dto.getId());
+        userEntity.setFirstName(dto.getFirstName());
+        userEntity.setLastName(dto.getLastName());
+        userEntity.setEmail(dto.getEmail());
+        userEntity.setDateOfBirth(dto.getDateOfBirth());
+        userEntity.setGender(dto.getGender());
+        userEntity.setPhoneNumber(dto.getPhoneNumber());
+        userEntity.setPassword(dto.getPassword());
 
-            userDao.update(userEntity);
+        userDao.update(userEntity);
 
-            log.debug("User updated: {}", userEntity);
+        log.debug("User updated: {}", userEntity);
 
-            return dto;
-        } catch (SQLException e) {
-            log.error("Failed to update user: {}", dto, e);
-            throw new RuntimeException(e);
-        }
+        return dto;
     }
 
     @Override
     public void delete(Long id) {
-        try {
-            log.debug("Deleting user: {}", id);
+        log.debug("Deleting user: {}", id);
 
-            userDao.delete(id);
+        userDao.delete(id);
 
-            log.debug("User deleted: {}", id);
-        } catch (SQLException e) {
-            log.error("Failed to delete user: {}", id, e);
-            throw new RuntimeException(e);
-        }
+        log.debug("User deleted: {}", id);
     }
 
     @Override
     public UserDto findByEmail(String email) {
-        try {
-            log.debug("Fetching user by email: {}", email);
-            User userEntity = userDao.findByEmail(email);
+        log.debug("Fetching user by email: {}", email);
+        UserDto userEntity = userDao.findByEmail(email);
 
-            if (userEntity == null) {
-                throw new IllegalArgumentException("User with email " + email + " not found");
-            }
-
-            UserDto dto = userReadDto(userEntity);
-
-            log.debug("User received: {}", dto);
-
-            return dto;
-        } catch (SQLException e) {
-            log.error("Failed to find user: {}", email, e);
-            throw new RuntimeException(e);
+        if (userEntity == null) {
+            throw new IllegalArgumentException("User with email " + email + " not found");
         }
+
+        UserDto dto = userReadDto(userEntity);
+
+        log.debug("User received: {}", dto);
+
+        return dto;
     }
 
-    private static UserDto userReadDto(User userEntity) {
+    private static UserDto userReadDto(UserDto userEntity) {
         UserDto dto = new UserDto();
         dto.setId(userEntity.getId());
         dto.setFirstName(userEntity.getFirstName());
@@ -145,17 +120,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto findById(Long id) {
-        try {
-            log.debug("Fetching user by ID: {}", id);
+        log.debug("Fetching user by ID: {}", id);
 
-            User userEntity = userDao.read(id);
-            UserDto dto = userReadDto(userEntity);
+        UserDto userEntity = userDao.read(id);
+        UserDto dto = userReadDto(userEntity);
 
-            log.debug("User received", dto);
-            return dto;
-        } catch (SQLException e) {
-            log.error("Failed to find user: {}", id, e);
-            throw new RuntimeException(e);
-        }
+        log.debug("User received", dto);
+        return dto;
     }
 }
