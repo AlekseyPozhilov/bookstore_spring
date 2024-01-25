@@ -28,6 +28,7 @@ public class DataMapperImpl implements DataMapper{
     @Override
     public Book toEntity(BookDto dto) {
         Book bookEntity = new Book();
+        bookEntity.setId(dto.getId());
         bookEntity.setAuthor(dto.getAuthor());
         bookEntity.setIsbn(dto.getIsbn());
         bookEntity.setNumberOfPages(dto.getNumberOfPages());
@@ -52,6 +53,7 @@ public class DataMapperImpl implements DataMapper{
     @Override
     public User toEntity(UserDto dto) {
         User userEntity = new User();
+        userEntity.setId(dto.getId());
         userEntity.setFirstName(dto.getFirstName());
         userEntity.setLastName(dto.getLastName());
         userEntity.setEmail(dto.getEmail());
@@ -94,7 +96,7 @@ public class DataMapperImpl implements DataMapper{
         dto.setBookPrice(dto.getBookPrice());
         dto.setBookQuantity(dto.getBookQuantity());
         dto.setOrderId(dto.getOrderId());
-        return null;
+        return dto;
     }
 
     @Override
