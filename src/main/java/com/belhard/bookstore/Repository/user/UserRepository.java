@@ -10,4 +10,5 @@ public interface UserRepository {
     List<User> findAll();
     User update(User user);
     boolean delete(Long id);
+    User findByEmail(String email);
 }

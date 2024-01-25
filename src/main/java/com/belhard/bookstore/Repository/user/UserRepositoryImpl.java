@@ -2,6 +2,7 @@ package com.belhard.bookstore.Repository.user;
 
 import com.belhard.bookstore.dao.user.UserDao;
 import com.belhard.bookstore.dataMapper.DataMapper;
+import com.belhard.bookstore.dto.user.CreateUserDto;
 import com.belhard.bookstore.dto.user.UserDto;
 import com.belhard.bookstore.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     public User findByID(Long id) {
         return dataMapper.toEntity(userDao.read(id));
+    }
+    public User findByEmail(String email) {
+        return dataMapper.toEntity(userDao.findByEmail(email));
     }
 
     public User create(User user) {
