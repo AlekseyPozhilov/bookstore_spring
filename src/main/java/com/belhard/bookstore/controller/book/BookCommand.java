@@ -25,6 +25,5 @@ public class BookCommand implements Command {
                 log.error("BookService is null");
                 throw new RuntimeException("BookService is not available");
             }
-
     }
 }
