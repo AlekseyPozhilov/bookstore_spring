@@ -103,8 +103,8 @@ public class OrderInfoDaoImpl implements OrderInfoDao {
             log.info("Enter method mapRow in UserDao");
             OrderInfoDto orderInfoDto = new OrderInfoDto();
             orderInfoDto.setId(resultSet.getLong("id"));
-            orderInfoDto.setOrderId(resultSet.getLong("orderId"));
-            orderInfoDto.setBookId(resultSet.getLong("bookId"));
+            orderInfoDto.setOrderId(resultSet.getLong("order_id"));
+            orderInfoDto.setBookId(resultSet.getLong("book_id"));
             orderInfoDto.setBookQuantity(resultSet.getInt("quantity"));
             orderInfoDto.setBookPrice(resultSet.getBigDecimal("price"));
             return orderInfoDto;

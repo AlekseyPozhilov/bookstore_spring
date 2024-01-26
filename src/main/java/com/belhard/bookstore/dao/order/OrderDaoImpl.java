@@ -22,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Repository
 public class OrderDaoImpl implements OrderDao {
-    private static final String FIND_BY_ID = "SELECT id, user_id, total_cost, status FROM orders WHERE id = ";
+    private static final String FIND_BY_ID = "SELECT id, user_id, total_cost, status FROM orders WHERE id = ?";
     private static final String FIND_ALL = "SELECT id, user_id, total_cost, status FROM orders";
     private static final String INSERT = "INSERT INTO orders (user_id, total_cost, status) VALUES (?, ?, ?)";
     private static final String UPDATE = "UPDATE orders SET user_id = :user_id, total_cost = :total_cost, status = :status WHERE id = :id";
@@ -38,6 +38,7 @@ public class OrderDaoImpl implements OrderDao {
         try {
             return jdbcTemplate.query(FIND_ALL, this::mapRow);
         } catch (DataAccessException e) {
+            log.error("Error occurred while finding all orders: {}", e.getMessage());
             return null;
         }
 
@@ -66,7 +67,7 @@ public class OrderDaoImpl implements OrderDao {
     public OrderDto update(OrderDto order) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("user_id", order.getUserId());
-        parameters.put("totalCost", order.getTotalCost());
+        parameters.put("total_cost", order.getTotalCost());
         parameters.put("status", order.getStatus());
         namedParameterJdbcTemplate.update(UPDATE, parameters);
         return findById(order.getId());
@@ -76,7 +77,7 @@ public class OrderDaoImpl implements OrderDao {
         OrderDto order = new OrderDto();
         order.setId(resultSet.getLong("id"));
         order.setUserId(resultSet.getLong("user_id"));
-        order.setTotalCost(resultSet.getBigDecimal("totalCost"));
+        order.setTotalCost(resultSet.getBigDecimal("total_cost"));
         order.setStatus(OrderDto.Status.valueOf(resultSet.getString("status")));
         return order;
     }
