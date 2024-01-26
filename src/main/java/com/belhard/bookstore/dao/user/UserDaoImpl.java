@@ -1,6 +1,6 @@
 package com.belhard.bookstore.dao.user;
 
-import com.belhard.bookstore.entity.User;
+import com.belhard.bookstore.dto.user.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataAccessException;
@@ -32,7 +32,7 @@ public class UserDaoImpl implements UserDao {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public User create(User user) {
+    public UserDto create(UserDto user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement statement = connection.prepareStatement(INSERT_QUERY, Statement.RETURN_GENERATED_KEYS);
@@ -51,12 +51,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User read(Long id) {
+    public UserDto read(Long id) {
         return jdbcTemplate.queryForObject(SELECT_QUERY, this::mapRow, id);
     }
 
     @Override
-    public User update(User user) {
+    public UserDto update(UserDto user) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", user.getId());
         parameters.put("firstName", user.getFirstName());
@@ -77,12 +77,12 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findByEmail(String email) {
+    public UserDto findByEmail(String email) {
         return jdbcTemplate.queryForObject(SELECT_BY_EMAIL_QUERY, this::mapRow, email);
     }
 
     @Override
-    public List<User> getAll() throws SQLException {
+    public List<UserDto> getAll(){
         try {
             return jdbcTemplate.query(SELECT_ALL_QUERY, this::mapRow);
         } catch (DataAccessException e) {
@@ -90,8 +90,8 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    private User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        User user = new User();
+    private UserDto mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        UserDto user = new UserDto();
         user.setId(resultSet.getLong("id"));
         user.setFirstName(resultSet.getString("firstName"));
         user.setLastName(resultSet.getString("lastName"));

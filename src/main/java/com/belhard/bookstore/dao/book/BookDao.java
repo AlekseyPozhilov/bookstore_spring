@@ -1,22 +1,23 @@
 package com.belhard.bookstore.dao.book;
 
+import com.belhard.bookstore.dto.book.BookDto;
 import com.belhard.bookstore.entity.Book;
 
 import java.sql.SQLException;
 import java.util.List;
 
 public interface BookDao {
-    Book create(Book book) throws SQLException;
+    BookDto create(BookDto book);
 
-    Book update(Book book) throws SQLException;
+    BookDto update(BookDto book);
 
-    boolean delete(int id) throws SQLException;
+    boolean delete(Long id);
 
-    List<Book> getAll() throws SQLException;
+    List<BookDto> getAll();
 
-    Book findById(Long id);
+    BookDto findById(Long id);
 
-    Book findByIsbn(String isbn) throws SQLException;
+    BookDto findByIsbn(String isbn);
 
-    long countAll() throws SQLException;
+    long countAll();
 }

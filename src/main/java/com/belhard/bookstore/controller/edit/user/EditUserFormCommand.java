@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 @Controller("edit_user_form")
 public class EditUserFormCommand implements Command {
     private final UserService userService;
+
     public String execute(HttpServletRequest req) {
         long id = Long.parseLong(req.getParameter("id"));
         UserDto toEdit = userService.findById(id);
@@ -18,4 +19,5 @@ public class EditUserFormCommand implements Command {
         return "jsp/user/editUserForm.jsp";
     }
 }
+
 
