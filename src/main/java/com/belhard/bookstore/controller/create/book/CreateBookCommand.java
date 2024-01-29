@@ -16,13 +16,13 @@ import java.math.BigDecimal;
 public class CreateBookCommand implements Command {
     private final BookService bookService;
     public String execute(HttpServletRequest req) {
-        CreateBookDto toSave = processRequest(req);
+        BookDto toSave = processRequest(req);
         BookDto saved = bookService.create(toSave);
 
         return FrontController.REDIRECT + FrontController.PATH + "book&id=" + saved.getId();
     }
 
-    private static CreateBookDto processRequest(HttpServletRequest req) {
+    private static BookDto processRequest(HttpServletRequest req) {
         String title = req.getParameter("title");
         String author = req.getParameter("author");
         String isbn = req.getParameter("isbn");
@@ -31,7 +31,7 @@ public class CreateBookCommand implements Command {
         Integer numberOfPages = Integer.valueOf(req.getParameter("numberOfPages"));
         Integer yearOfPublishing = Integer.valueOf(req.getParameter("yearOfPublishing"));
 
-        CreateBookDto dto = new CreateBookDto();
+        BookDto dto = new BookDto();
         dto.setTitle(title);
         dto.setAuthor(author);
         dto.setIsbn(isbn);

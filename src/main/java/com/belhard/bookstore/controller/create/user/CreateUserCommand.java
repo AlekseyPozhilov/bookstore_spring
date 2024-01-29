@@ -16,18 +16,18 @@ import org.springframework.stereotype.Controller;
 public class CreateUserCommand implements Command {
     private final UserService userService;
     public String execute(HttpServletRequest req) {
-        CreateUserDto toSave = processRequest(req);
+        UserDto toSave = processRequest(req);
         UserDto saved = userService.create(toSave);
 
         return FrontController.REDIRECT + FrontController.PATH + "user&id=" + saved.getId();
     }
 
-    private static CreateUserDto processRequest(HttpServletRequest req) {
+    private static UserDto processRequest(HttpServletRequest req) {
         String firstName = req.getParameter("firstName");
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
-        CreateUserDto dto = new CreateUserDto();
+        UserDto dto = new UserDto();
         dto.setFirstName(firstName);
         dto.setEmail(email);
         dto.setPassword(password);
