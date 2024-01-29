@@ -20,10 +20,10 @@
         </tr>
         <c:forEach items="${cartItems}" var="item">
             <tr>
-                <td>${item.title}</td>
-                <td>${item.author}</td>
-                <td>${item.price}</td>
-                <td>${item.quantity}</td>
+                <td>${order.title}</td>
+                <td>${order.author}</td>
+                <td>${order.price}</td>
+                <td>${order.quantity}</td>
             </tr>
         </c:forEach>
     </table>
