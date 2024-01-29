@@ -1,14 +1,15 @@
 package com.belhard.bookstore.service.book;
 
-import com.belhard.bookstore.Repository.book.BookRepository;
+import com.belhard.bookstore.repository.book.BookRepository;
 import com.belhard.bookstore.dto.book.BookDto;
-import com.belhard.bookstore.dto.book.CreateBookDto;
 import com.belhard.bookstore.entity.Book;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -18,107 +19,95 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDto> findAll() {
-        log.debug("Fetching all books");
-
-        return bookRepository.findAll().stream().map(BookServiceImpl::bookReadDto).toList();
+        return bookRepository.findAll()
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public BookDto findById(Long id) {
-        log.debug("Fetching book by ID: {}", id);
-
-        Book book = bookRepository.findById(id);
-        if (book == null) {
-            throw new RuntimeException("No book with id = " + id);
-        }
-        return bookReadDto(book);
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No book with id = " + id));
+        return mapToDto(book);
     }
 
     @Override
     public BookDto findByIsbn(String isbn) {
-        log.debug("Fetching book by ISBN: {}", isbn);
-        Book book = bookRepository.findByIsbn(isbn);
-
-        if (book == null) {
-            throw new IllegalArgumentException("Book with isbn " + isbn + " not found");
-        }
+        log.debug("Fetching book by email: {}", isbn);
+        Book book = bookRepository.findByIsbn(isbn)
+                .orElseThrow(() -> new IllegalArgumentException("Book with isbn " + isbn + " not found"));
 
         log.debug("Book received: {}", isbn);
 
-        return bookReadDto(book);
+        return mapToDto(book);
     }
 
     @Override
-    public BookDto create(CreateBookDto dto) {
+    public BookDto create(BookDto dto) {
         log.debug("Creating book: {}", dto);
-
-        Book book = toEntityCreate(dto);
+        Book book = mapToEntity(dto);
         Book created = bookRepository.create(book);
-        log.debug("Book created: {}", book);
-        return bookReadDto(created);
+        log.debug("Book created: {}", created);
+        return mapToDto(created);
     }
 
     @Override
     public BookDto update(BookDto dto) {
         log.debug("Updating book: {}", dto);
-        BookDto bookDto = findById(dto.getId());
-        bookDto.setAuthor(dto.getAuthor());
-        bookDto.setIsbn(dto.getIsbn());
-        bookDto.setNumberOfPages(dto.getNumberOfPages());
-        bookDto.setPrice(dto.getPrice());
-        bookDto.setYearOfPublishing(dto.getYearOfPublishing());
-        bookDto.setTitle(dto.getTitle());
 
-        Book book = toEntity(bookDto);
+        Book book = bookRepository.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("No book with id = " + dto.getId()));
+
+        book.setAuthor(dto.getAuthor());
+        book.setIsbn(dto.getIsbn());
+        book.setNumberOfPages(dto.getNumberOfPages());
+        book.setPrice(dto.getPrice());
+        book.setYearOfPublishing(dto.getYearOfPublishing());
+        book.setTitle(dto.getTitle());
+
         Book edited = bookRepository.update(book);
 
-        log.debug("Book updated: {}", bookDto);
+        log.debug("Book updated: {}", edited);
 
-        return bookReadDto(edited);
+        return mapToDto(edited);
     }
 
-    @Override
-    public void delete(Long id) {
-        log.debug("Deleting book: {}", id);
+@Override
+public void delete(Long id) {
+    log.debug("Deleting book: {}", id);
 
+    Optional<Book> bookOptional = bookRepository.findById(id);
+    if (bookOptional.isPresent()) {
         bookRepository.delete(id);
-
-        log.debug("Book deleted: {}", id);
+    } else {
+        throw new RuntimeException("No book with id = " + id);
     }
 
-    private static BookDto bookReadDto(Book bookEntity) {
-        BookDto dto = new BookDto();
-        dto.setId(bookEntity.getId());
-        dto.setAuthor(bookEntity.getAuthor());
-        dto.setIsbn(bookEntity.getIsbn());
-        dto.setNumberOfPages(bookEntity.getNumberOfPages());
-        dto.setPrice(bookEntity.getPrice());
-        dto.setYearOfPublishing(bookEntity.getYearOfPublishing());
-        dto.setTitle(bookEntity.getTitle());
+    log.debug("Book deleted: {}", id);
+}
 
+    private BookDto mapToDto(Book book) {
+        BookDto dto = new BookDto();
+        dto.setId(book.getId());
+        dto.setAuthor(book.getAuthor());
+        dto.setIsbn(book.getIsbn());
+        dto.setNumberOfPages(book.getNumberOfPages());
+        dto.setPrice(book.getPrice());
+        dto.setYearOfPublishing(book.getYearOfPublishing());
+        dto.setTitle(book.getTitle());
         return dto;
     }
 
-    private static Book toEntity(BookDto dto) {
-        Book bookEntity = new Book();
-        bookEntity.setId(dto.getId());
-        bookEntity.setAuthor(dto.getAuthor());
-        bookEntity.setIsbn(dto.getIsbn());
-        bookEntity.setNumberOfPages(dto.getNumberOfPages());
-        bookEntity.setPrice(dto.getPrice());
-        bookEntity.setYearOfPublishing(dto.getYearOfPublishing());
-        bookEntity.setTitle(dto.getTitle());
-        return bookEntity;
-    }
-
-    private static Book toEntityCreate(CreateBookDto dto) {
-        Book bookEntity = new Book();
-        bookEntity.setAuthor(dto.getAuthor());
-        bookEntity.setIsbn(dto.getIsbn());
-        bookEntity.setNumberOfPages(dto.getNumberOfPages());
-        bookEntity.setPrice(dto.getPrice());
-        bookEntity.setYearOfPublishing(dto.getYearOfPublishing());
-        bookEntity.setTitle(dto.getTitle());
-        return bookEntity;
+    private Book mapToEntity(BookDto dto) {
+        Book book = new Book();
+        book.setId(dto.getId());
+        book.setAuthor(dto.getAuthor());
+        book.setIsbn(dto.getIsbn());
+        book.setNumberOfPages(dto.getNumberOfPages());
+        book.setPrice(dto.getPrice());
+        book.setYearOfPublishing(dto.getYearOfPublishing());
+        book.setTitle(dto.getTitle());
+        return book;
     }
 }
