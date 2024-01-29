@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Log4j2
 @RequiredArgsConstructor
-@Repository
+//@Repository
 public class OrderDaoImpl implements OrderDao {
     private static final String FIND_BY_ID = "SELECT id, user_id, total_cost, status FROM orders WHERE id = ?";
     private static final String FIND_ALL = "SELECT id, user_id, total_cost, status FROM orders";
