@@ -1,14 +1,18 @@
-package com.belhard.bookstore.Repository.user;
+package com.belhard.bookstore.repository.user;
 
 import com.belhard.bookstore.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository {
-    User findByID(Long id);
+    Optional<User> findById(Long key);
     User create(User user);
+
     List<User> findAll();
     User update(User user);
+
     boolean delete(Long id);
-    User findByEmail(String email);
+
+    Optional<User> findByEmail(String email);
 }

@@ -20,7 +20,7 @@ import java.util.Map;
 
 @Log4j2
 @RequiredArgsConstructor
-@Repository
+//@Repository
 public class UserDaoImpl implements UserDao {
     public static final String INSERT_QUERY = "INSERT INTO users (firstName, lastName, email, dateOfBirth, gender, phoneNumber, password) VALUES (?, ?, ?, ?, ?, ?, ?)";
     public static final String SELECT_QUERY = "SELECT id, firstName, lastName, email, dateOfBirth, gender, phoneNumber, password FROM users WHERE id = ?";

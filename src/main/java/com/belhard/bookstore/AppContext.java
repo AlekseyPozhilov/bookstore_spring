@@ -1,50 +1,25 @@
 package com.belhard.bookstore;
 
-
-import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Value;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-
-import javax.sql.DataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.transaction.TransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan
-@PropertySource("classpath:/application.properties")
+@EnableTransactionManagement
 public class AppContext {
-    @Value("${my.app.db.${my.app.profile}.url}")
-    private String url;
-
-    @Value("${my.app.db.${my.app.profile}.user}")
-    private String user;
-
-    @Value("${my.app.db.${my.app.profile}.password}")
-    private String password;
-
-    @Value("${my.app.db.${my.app.profile}.drv}")
-    private String drv;
-    @Value("${my.app.db.${my.app.profile}.poolSize}")
-    private int pooolSize;
     @Bean
-    public DataSource dataSource(){
-        HikariDataSource dataSource = new HikariDataSource();
-        dataSource.setJdbcUrl(url);
-        dataSource.setUsername(user);
-        dataSource.setPassword(password);
-        dataSource.setDriverClassName(drv);
-        dataSource.setMaximumPoolSize(pooolSize);
-        return dataSource;
+    public EntityManagerFactory entityManagerFactory(){
+        return Persistence.createEntityManagerFactory("psql");
     }
+
     @Bean
-    public JdbcTemplate jdbcTemplate(DataSource dataSource){
-        return new JdbcTemplate(dataSource);
-    }
-    @Bean
-    public NamedParameterJdbcTemplate namedParameterJdbcTemplate(DataSource dataSource){
-        return new NamedParameterJdbcTemplate(dataSource);
+    public TransactionManager transactionManager(EntityManagerFactory factory){
+        return new JpaTransactionManager(factory);
     }
 }

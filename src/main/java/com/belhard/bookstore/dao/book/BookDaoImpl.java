@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Log4j2
-@Repository
+//@Repository
 @RequiredArgsConstructor
 public class BookDaoImpl implements BookDao {
     private static final String SELECT_ISBN_QUERY = "SELECT id, author, numberOfPages, price, yearOfPublishing, title FROM books WHERE isbn = ?";

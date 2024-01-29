@@ -1,14 +1,17 @@
 package com.belhard.bookstore.service.user;
 
-import com.belhard.bookstore.Repository.user.UserRepository;
 import com.belhard.bookstore.dto.user.CreateUserDto;
+import com.belhard.bookstore.repository.user.UserRepository;
 import com.belhard.bookstore.dto.user.UserDto;
 import com.belhard.bookstore.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RequiredArgsConstructor
@@ -18,44 +21,53 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findAll() {
-        return userRepository.findAll().stream().map(UserServiceImpl::userReadDto).toList();
+        return userRepository.findAll()
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public UserDto create(CreateUserDto dto) {
+    public UserDto create(UserDto dto) {
         log.debug("Creating user: {}", dto);
-        User user = toEntityCreate(dto);
+        User user = mapToEntity(dto);
         User created = userRepository.create(user);
-        log.debug("User created: {}", user);
-        return userReadDto(created);
+        log.debug("User created: {}", created);
+        return mapToDto(created);
     }
 
     @Override
     public UserDto update(UserDto dto) {
         log.debug("Updating user: {}", dto);
 
-        UserDto userDto = findById(dto.getId());
-        userDto.setFirstName(dto.getFirstName());
-        userDto.setLastName(dto.getLastName());
-        userDto.setEmail(dto.getEmail());
-        userDto.setDateOfBirth(dto.getDateOfBirth());
-        userDto.setGender(dto.getGender());
-        userDto.setPhoneNumber(dto.getPhoneNumber());
-        userDto.setPassword(dto.getPassword());
+        User user = userRepository.findById(dto.getId())
+                .orElseThrow(() -> new RuntimeException("No user with id = " + dto.getId()));
 
-        User user = toEntity(userDto);
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setEmail(dto.getEmail());
+        user.setDateOfBirth(dto.getDateOfBirth());
+        user.setGender(dto.getGender());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        user.setPassword(dto.getPassword());
+
         User edited = userRepository.update(user);
 
-        log.debug("User updated: {}", userDto);
+        log.debug("User updated: {}", edited);
 
-        return userReadDto(edited);
+        return mapToDto(edited);
     }
 
     @Override
     public void delete(Long id) {
         log.debug("Deleting user: {}", id);
 
-        userRepository.delete(id);
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            userRepository.delete(id);
+        } else {
+            throw new RuntimeException("No user with id = " + id);
+        }
 
         log.debug("User deleted: {}", id);
     }
@@ -63,61 +75,44 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto findByEmail(String email) {
         log.debug("Fetching user by email: {}", email);
-        User user = userRepository.findByEmail(email);
-
-        if (user == null) {
-            throw new IllegalArgumentException("User with email " + email + " not found");
-        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("User with email " + email + " not found"));
 
         log.debug("User received: {}", email);
 
-        return userReadDto(user);
+        return mapToDto(user);
     }
 
     @Override
     public UserDto findById(Long id) {
-        User user = userRepository.findByID(id);
-        if (user == null) {
-            throw new RuntimeException("No user with id = " + id);
-        }
-        return userReadDto(user);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("No user with id = " + id));
+        return mapToDto(user);
     }
 
-    private static UserDto userReadDto(User userEntity) {
+    private UserDto mapToDto(User user) {
         UserDto dto = new UserDto();
-        dto.setId(userEntity.getId());
-        dto.setFirstName(userEntity.getFirstName());
-        dto.setLastName(userEntity.getLastName());
-        dto.setEmail(userEntity.getEmail());
-        dto.setDateOfBirth(userEntity.getDateOfBirth());
-        dto.setGender(userEntity.getGender());
-        dto.setPhoneNumber(userEntity.getPhoneNumber());
-        dto.setPassword(userEntity.getPassword());
+        dto.setId(user.getId());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setEmail(user.getEmail());
+        dto.setDateOfBirth(user.getDateOfBirth());
+        dto.setGender(user.getGender());
+        dto.setPhoneNumber(user.getPhoneNumber());
+        dto.setPassword(user.getPassword());
         return dto;
     }
 
-    private static User toEntityCreate(CreateUserDto dto) {
-        User userEntity = new User();
-        userEntity.setFirstName(dto.getFirstName());
-        userEntity.setLastName(dto.getLastName());
-        userEntity.setEmail(dto.getEmail());
-        userEntity.setDateOfBirth(dto.getDateOfBirth());
-        userEntity.setGender(dto.getGender());
-        userEntity.setPhoneNumber(dto.getPhoneNumber());
-        userEntity.setPassword(dto.getPassword());
-        return userEntity;
-    }
-
-    private static User toEntity(UserDto dto) {
-        User userEntity = new User();
-        userEntity.setId(dto.getId());
-        userEntity.setFirstName(dto.getFirstName());
-        userEntity.setLastName(dto.getLastName());
-        userEntity.setEmail(dto.getEmail());
-        userEntity.setDateOfBirth(dto.getDateOfBirth());
-        userEntity.setGender(dto.getGender());
-        userEntity.setPhoneNumber(dto.getPhoneNumber());
-        userEntity.setPassword(dto.getPassword());
-        return userEntity;
+    private User mapToEntity(UserDto dto) {
+        User user = new User();
+        user.setId(dto.getId());
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setEmail(dto.getEmail());
+        user.setDateOfBirth(dto.getDateOfBirth());
+        user.setGender(dto.getGender());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        user.setPassword(dto.getPassword());
+        return user;
     }
 }

@@ -20,7 +20,7 @@ import java.util.List;
 
 @Log4j2
 @RequiredArgsConstructor
-@Repository
+//@Repository
 public class OrderInfoDaoImpl implements OrderInfoDao {
     private static final String FIND_BY_ID_SCRIPT = "SELECT o.id, o.price, o.quantity, o.order_id, o.book_id FROM order_item o WHERE id = ?";
     private static final String FIND_BY_ORDER_ID_SCRIPT = "SELECT o.id, o.price, o.quantity, o.order_id, o.book_id FROM order_item o WHERE o.order_id = ?";
