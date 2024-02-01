@@ -1,6 +1,6 @@
-package com.belhard.bookstore.repository.user;
+package com.belhard.bookstore.data.repository.user;
 
-import com.belhard.bookstore.entity.User;
+import com.belhard.bookstore.data.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -57,8 +57,8 @@ public class UserRepositoryImpl implements UserRepository {
         return null;
     }
     @Override
-    public boolean delete(Long key) {
-        User user = manager.find(User.class, key);
+    public boolean delete(Long id) {
+        User user = manager.find(User.class, id);
         if (user != null) {
             manager.remove(user);
             return true;
