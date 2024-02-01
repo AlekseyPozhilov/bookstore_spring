@@ -1,9 +1,8 @@
-package com.belhard.bookstore.repository.order;
+package com.belhard.bookstore.data.repository.order;
 
-import com.belhard.bookstore.entity.Order;
+import com.belhard.bookstore.data.entity.Order;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface OrderRepository {
     Order findById(Long key);

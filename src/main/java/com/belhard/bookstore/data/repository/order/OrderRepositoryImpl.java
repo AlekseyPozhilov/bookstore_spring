@@ -1,9 +1,9 @@
-package com.belhard.bookstore.repository.order;
+package com.belhard.bookstore.data.repository.order;
 
-import com.belhard.bookstore.entity.Book;
-import com.belhard.bookstore.entity.Order;
-import com.belhard.bookstore.entity.OrderInfo;
-import com.belhard.bookstore.entity.User;
+import com.belhard.bookstore.data.entity.Book;
+import com.belhard.bookstore.data.entity.Order;
+import com.belhard.bookstore.data.entity.OrderInfo;
+import com.belhard.bookstore.data.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -63,9 +63,9 @@ public class OrderRepositoryImpl implements OrderRepository {
         order.setUser(manager.find(User.class, order.getUser().getId()));
         List<OrderInfo> items = order.getItems()
                 .stream()
-                .map(orderItem -> {
-                    orderItem.setBook(manager.find(Book.class, orderItem.getBook().getId()));
-                    return orderItem;
+                .map(orderInfo -> {
+                    orderInfo.setBook(manager.find(Book.class, orderInfo.getBook().getId()));
+                    return orderInfo;
                 })
                 .collect(Collectors.toList());
         order.setItems(items);
