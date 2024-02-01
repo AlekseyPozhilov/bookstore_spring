@@ -1,6 +1,5 @@
-package com.belhard.bookstore.dto.order;
+package com.belhard.bookstore.data.dto.order;
 
-import com.belhard.bookstore.entity.Book;
 import lombok.Data;
 
 import java.math.BigDecimal;
