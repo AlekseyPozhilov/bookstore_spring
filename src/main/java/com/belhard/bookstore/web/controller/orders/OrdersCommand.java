@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -22,5 +24,21 @@ public class OrdersCommand {
         model.addAttribute("orders", orders);
 
         return "orders";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String deleteOrderForm(@PathVariable("id") Long id) {
+        orderService.delete(id);
+        return "redirect:/orders/getAll";
+    }
+
+    @GetMapping("/{id}")
+    public String getOrder(@PathVariable("id") Long id, Model model) {
+        OrderDto order = orderService.findById(id);
+        if (order == null) {
+            throw new RuntimeException("No order with id = " + id);
+        }
+        model.addAttribute("order", order);
+        return "order";
     }
 }
