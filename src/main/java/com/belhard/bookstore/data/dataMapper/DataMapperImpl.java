@@ -1,13 +1,13 @@
-package com.belhard.bookstore.dataMapper;
+package com.belhard.bookstore.data.dataMapper;
 
-import com.belhard.bookstore.dto.book.BookDto;
-import com.belhard.bookstore.dto.order.OrderDto;
-import com.belhard.bookstore.dto.order.OrderInfoDto;
-import com.belhard.bookstore.dto.user.UserDto;
-import com.belhard.bookstore.entity.Book;
-import com.belhard.bookstore.entity.Order;
-import com.belhard.bookstore.entity.OrderInfo;
-import com.belhard.bookstore.entity.User;
+import com.belhard.bookstore.data.dto.book.BookDto;
+import com.belhard.bookstore.data.dto.order.OrderDto;
+import com.belhard.bookstore.data.dto.order.OrderInfoDto;
+import com.belhard.bookstore.data.dto.user.UserDto;
+import com.belhard.bookstore.data.entity.Book;
+import com.belhard.bookstore.data.entity.Order;
+import com.belhard.bookstore.data.entity.OrderInfo;
+import com.belhard.bookstore.data.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
