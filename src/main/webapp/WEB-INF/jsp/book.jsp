@@ -3,7 +3,7 @@
 
 <head>
     <title>Book</title>
-    <link rel="stylesheet" type="text/css" href="css/book/book.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/book/book.css">
 </head>
 
 <body>
@@ -16,7 +16,7 @@
         <p><strong>Year of Publishing:</strong> ${book.yearOfPublishing}</p>
     </div>
 
-    <a href="bookstore?command=books" class="back-button">Back</a>
+    <a href="getAll" class="back-button">Back</a>
 </body>
 
 </html>
