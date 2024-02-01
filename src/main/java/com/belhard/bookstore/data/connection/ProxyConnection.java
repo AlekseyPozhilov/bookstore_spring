@@ -1,8 +1,7 @@
-package com.belhard.bookstore.connection;
+package com.belhard.bookstore.data.connection;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.sql.Array;
 import java.sql.Blob;

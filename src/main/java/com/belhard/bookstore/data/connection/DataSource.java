@@ -1,4 +1,4 @@
-package com.belhard.bookstore.connection;
+package com.belhard.bookstore.data.connection;
 
 import java.io.Closeable;
 import java.sql.Connection;

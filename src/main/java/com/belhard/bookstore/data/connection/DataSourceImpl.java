@@ -1,4 +1,4 @@
-package com.belhard.bookstore.connection;
+package com.belhard.bookstore.data.connection;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
