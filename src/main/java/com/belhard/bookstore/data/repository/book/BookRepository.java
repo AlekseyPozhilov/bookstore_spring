@@ -1,6 +1,6 @@
-package com.belhard.bookstore.repository.book;
+package com.belhard.bookstore.data.repository.book;
 
-import com.belhard.bookstore.entity.Book;
+import com.belhard.bookstore.data.entity.Book;
 
 import java.util.List;
 import java.util.Optional;
