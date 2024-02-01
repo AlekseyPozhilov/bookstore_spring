@@ -2,10 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="css/orders/orders.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/orders/orders.css">
 </head>
 <body>
-    <jsp:include page="../navbar.jsp" />
+    <jsp:include page="navbar.jsp" />
     <h1>All orders</h1>
     <table>
         <tr>
@@ -18,7 +18,7 @@
         <c:forEach items="${orders}" var="order" varStatus="counter">
             <tr>
                 <td>${counter.count}</td>
-                <td><a href="bookstore?command=order&id=${order.id}">${order.id}</a></td>
+                <td><a href="/orders/${order.id}">${order.id}</a></td>
                 <td>${order.totalCost}</td>
                 <td>${order.status}</td>
                 <td>${order.items}</td>

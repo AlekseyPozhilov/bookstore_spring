@@ -3,7 +3,7 @@
 
 <head>
     <title>User</title>
-    <link rel="stylesheet" type="text/css" href="css/user/user.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/user/user.css">
 </head>
 
 <body>
@@ -14,7 +14,7 @@
         <p><strong>Password:</strong> ${user.password}</p>
     </div>
 
-    <a href="bookstore?command=users" class="back-button">Back</a>
+    <a href="getAll" class="back-button">Back</a>
 </body>
 
 </html>

@@ -3,14 +3,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="css/book/books.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/book/books.css">
     <title>Books</title>
 </head>
 <body>
-<jsp:include page="../navbar.jsp" />
-<form>
-<input type="hidden" name="command" value="create_book_form">
-<input type="submit" value="Create book">
+<jsp:include page="navbar.jsp" />
+<form action="/books/create" method="get">
+    <input type="submit" value="Create book">
 </form>
 <h1>All Books</h1>
 <table>
@@ -21,20 +20,23 @@
         <th>Author</th>
         <th>Price</th>
         <th>Edit</th>
+        <th>Delete</th>
     </tr>
     <c:forEach items="${books}" var="book" varStatus="counter">
         <tr>
             <td>${counter.count}</td>
             <td>${book.id}</td>
-            <td><a href="bookstore?command=book&id=${book.id}"><c:out value="${book.title}" /></a></td>
+            <td><a href="/books/${book.id}"><c:out value="${book.title}" /></a></td>
             <td>${book.author}</td>
             <td>${book.price}</td>
-
             <td>
-                <form>
-                    <input type="hidden" name="command" value="edit_book_form">
-                    <input type="hidden" name="id" value="${book.id}">
+                <form action="/books/edit/${book.id}" method="get">
                     <input type="submit" value="Edit">
+                </form>
+            </td>
+            <td>
+                <form action="/books/delete/${book.id}" method="post">
+                    <input type="submit" value="Delete">
                 </form>
             </td>
         </tr>

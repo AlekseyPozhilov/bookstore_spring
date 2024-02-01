@@ -3,10 +3,10 @@
 <html>
 <head>
     <title>Cart</title>
-    <link rel="stylesheet" type="text/css" href="css/cart/cart.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/cart/cart.css">
 </head>
 <body>
-<jsp:include page="../navbar.jsp" />
+<jsp:include page="navbar.jsp" />
 
 <h1>Cart</h1>
 
@@ -30,7 +30,7 @@
 </div>
 
 <div>
-   <a class="checkout-button" href="html/unavailable.html">Checkout</a>
+   <a class="checkout-button" href="/static/html/unavailable.html">Checkout</a>
 </div>
 
 </body>
