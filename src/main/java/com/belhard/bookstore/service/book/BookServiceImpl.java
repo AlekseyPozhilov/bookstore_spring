@@ -1,8 +1,8 @@
 package com.belhard.bookstore.service.book;
 
-import com.belhard.bookstore.repository.book.BookRepository;
-import com.belhard.bookstore.dto.book.BookDto;
-import com.belhard.bookstore.entity.Book;
+import com.belhard.bookstore.data.repository.book.BookRepository;
+import com.belhard.bookstore.data.dto.book.BookDto;
+import com.belhard.bookstore.data.entity.Book;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;

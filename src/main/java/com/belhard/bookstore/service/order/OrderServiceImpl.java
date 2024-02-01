@@ -1,17 +1,13 @@
 package com.belhard.bookstore.service.order;
 
-import com.belhard.bookstore.dto.book.BookDto;
-import com.belhard.bookstore.entity.Book;
-import com.belhard.bookstore.repository.order.OrderRepository;
-import com.belhard.bookstore.dto.order.OrderDto;
-import com.belhard.bookstore.entity.Order;
+import com.belhard.bookstore.data.repository.order.OrderRepository;
+import com.belhard.bookstore.data.dto.order.OrderDto;
+import com.belhard.bookstore.data.entity.Order;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Log4j2
@@ -33,7 +29,7 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> findAll() {
         return orderRepository.findAll()
                 .stream()
-                .map(this::mapToDto)
+                .map(this::mapToDto) //
                 .collect(Collectors.toList());
     }
 
@@ -79,6 +75,7 @@ private OrderDto mapToDto(Order order) {
     dto.setId(order.getId());
     dto.setTotalCost(order.getTotalCost());
     Order.Status status = order.getStatus();
+    dto.setItems(order.getItems());
     if (status != null) {
         dto.setStatus(OrderDto.Status.valueOf(status.toString()));
     }

@@ -1,7 +1,6 @@
 package com.belhard.bookstore.service.book;
 
-import com.belhard.bookstore.dto.book.BookDto;
-import com.belhard.bookstore.dto.book.CreateBookDto;
+import com.belhard.bookstore.data.dto.book.BookDto;
 
 import java.util.List;
 public interface BookService {
