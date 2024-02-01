@@ -1,15 +1,14 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
     <head>
-    <link rel="stylesheet" type="text/css" href="css/forms/universalForm.css">
-        <title>Register new user</title>
+    <link rel="stylesheet" type="text/css" href="/css/forms/universalForm.css">
+        <title>Edit user</title>
     </head>
 <body>
-    <jsp:include page="../navbar.jsp"/>
+    <jsp:include page="navbar.jsp"/>
     <h1>Edit user</h1>
-    <form method="post" action="bookstore">
-        <input name="command" type="hidden" value="edit_user"/>
-        <input name="id" type="hidden" value="${requestScope.user.id}"/>
+    <form method="post" action="/users/edit/${user.id}">
+
         <label for = "firstName-input">FIRST NAME:</label>
                 <input id = "firstName-input" name = "firstName" type = "text" required value="${user.firstName}"/>
                 <br/>
