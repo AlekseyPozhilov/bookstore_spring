@@ -1,4 +1,4 @@
-package com.belhard.bookstore.entity;
+package com.belhard.bookstore.data.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
