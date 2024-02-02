@@ -15,7 +15,7 @@ CREATE TABLE books
 	title VARCHAR(255)
 );
 
-INSERT INTO books (author, isbn, numberOfPages, price, yearOfPublishing, title)
+INSERT INTO books (author, isbn, number_of_pages, price, year_of_publishing, title)
 VALUES
 ('J.K. Rowling', '9780545010221', 336, 25.99, 1997,'Загадка синего лотоса'),
 ('George R.R. Martin', '9780553103540', 694, 32.50, 1996,'Тень прошлого'),
@@ -53,7 +53,7 @@ CREATE TABLE users
 	phoneNumber VARCHAR(255)
 );
 
-INSERT INTO users (firstName, lastName, email, dateOfBirth, gender, phoneNumber)
+INSERT INTO users (first_name, last_name, email, date_of_birth, gender, phone_number)
 VALUES
 ('John', 'Doe', 'johndoe@example.com', '1990-01-01', 'Male', '+1234567890'),
 ('Jane', 'Smith', 'janesmith@example.com', '1992-05-15', 'Female', '+9876543210'),
