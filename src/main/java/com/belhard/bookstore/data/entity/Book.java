@@ -26,13 +26,13 @@ public class Book {
     @Column(name = "isbn")
     private String isbn;
 
-    @Column(name = "numberOfPages")
+    @Column(name = "number_of_pages")
     private Integer numberOfPages;
 
     @Column(name = "price")
     private BigDecimal price;
 
-    @Column(name = "yearOfPublishing")
+    @Column(name = "year_of_publishing")
     private Integer yearOfPublishing;
 
     @Column(name = "title")
