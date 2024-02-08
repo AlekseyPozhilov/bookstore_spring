@@ -1,7 +1,7 @@
 <%@ page language = "java" contentType = "text/html; charset = UTF-8" pageEncoding = "UTF-8" %>
 <html>
 <head>
-<link rel = "stylesheet" type = "text/css" href = "/static/css/error/error.css">
+<link rel = "stylesheet" type = "text/css" href = "/css/error/error.css">
 <title> Error </title>
 </head>
 <body>

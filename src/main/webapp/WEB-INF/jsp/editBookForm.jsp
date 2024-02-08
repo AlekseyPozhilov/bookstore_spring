@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="/static/css/forms/universalForm.css">
+        <link rel="stylesheet" type="text/css" href="/css/forms/universalForm.css">
         <title>Edit book</title>
     </head>
 <body>

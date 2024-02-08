@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>BookStore</title>
-        <link rel="stylesheet" type="text/css" href="/static/css/home/home.css">
+        <link rel="stylesheet" type="text/css" href="/css/home/home.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,7 +35,7 @@
 <body>
     <div class="container">
         <h1>Welcome to Bookstore, Dear Guest!</h1>
-        <img src="static/images/bookstore.png" alt="bookstore">
+        <img src="/images/bookstore.png" alt="bookstore">
     </div>
      <jsp:include page="navbar.jsp" />
 </body>

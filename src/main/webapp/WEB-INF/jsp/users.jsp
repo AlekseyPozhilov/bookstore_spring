@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="stylesheet" type="text/css" href="/static/css/user/users.css">
+    <link rel="stylesheet" type="text/css" href="/css/user/users.css">
     <title>Users</title>
 </head>
 <body>
@@ -19,8 +19,8 @@
     </tr>
     <c:forEach items="${users}" var="user" varStatus="counter">
         <tr>
-            <td>${counter.count}</td>
-            <td>${user.id}</td>
+            <td><c:out value="${counter.count}" /></td>
+            <td><c:out value="${user.id}" /></td>
             <td><a href="/users/${user.id}"><c:out value="${user.email}" /></a></td>
             <td>
                <form action="/users/edit/${user.id}" method="get">

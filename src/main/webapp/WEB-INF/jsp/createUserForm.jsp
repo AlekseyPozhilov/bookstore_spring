@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Register new user</title>
-<link rel="stylesheet" type="text/css" href="/static/css/forms/universalForm.css">
+<link rel="stylesheet" type="text/css" href="/css/forms/universalForm.css">
 </head>
 <body>
 <jsp:include page = "navbar.jsp"/>
