@@ -1,6 +1,6 @@
-Project Title: Book Store
+# Project Title: Book Store
 
-Author: Aleksey Pozhilov
+## Author: Aleksey Pozhilov
 
 Project Description
 This project is a Java application for managing a book store. It utilizes the following technologies and frameworks:

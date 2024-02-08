@@ -37,7 +37,9 @@ public class OrderServiceImpl implements OrderService {
     public void delete(Long id) {
         log.debug("Deleting order: {}", id);
 
-        orderRepository.delete(id);
+        if (!orderRepository.delete(id)) {
+            throw new RuntimeException("No user with id = " + id);
+        }
 
         log.debug("Order deleted: {}", id);
     }

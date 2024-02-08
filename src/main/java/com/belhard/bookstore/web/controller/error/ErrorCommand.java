@@ -14,7 +14,7 @@ import javax.security.auth.login.AccountNotFoundException;
 @Controller
 @ControllerAdvice
 @RequestMapping("/error")
-public class ErrorCommand{
+public class ErrorCommand {
     @GetMapping
     public String error() {
         return "error";

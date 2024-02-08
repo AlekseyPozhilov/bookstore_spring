@@ -35,9 +35,6 @@ public class OrdersCommand {
     @GetMapping("/{id}")
     public String getOrder(@PathVariable("id") Long id, Model model) {
         OrderDto order = orderService.findById(id);
-        if (order == null) {
-            throw new RuntimeException("No order with id = " + id);
-        }
         model.addAttribute("order", order);
         return "order";
     }

@@ -60,10 +60,7 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         log.debug("Deleting user: {}", id);
 
-        Optional<User> userOptional = userRepository.findById(id);
-        if (userOptional.isPresent()) {
-            userRepository.delete(id);
-        } else {
+        if (!userRepository.delete(id)) {
             throw new RuntimeException("No user with id = " + id);
         }
 

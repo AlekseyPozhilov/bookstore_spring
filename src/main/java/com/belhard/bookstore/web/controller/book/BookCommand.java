@@ -23,9 +23,6 @@ public class BookCommand {
     @GetMapping("/{id}")
     public String getBook(@PathVariable("id") Long id, Model model) {
         BookDto book = bookService.findById(id);
-        if (book == null) {
-            throw new RuntimeException("No book with id = " + id);
-        }
         model.addAttribute("book", book);
         return "book";
     }
@@ -51,9 +48,6 @@ public class BookCommand {
     @GetMapping("/edit/{id}")
     public String editBookForm(@PathVariable("id") Long id, Model model) {
         BookDto book = bookService.findById(id);
-        if (book == null) {
-            throw new RuntimeException("No book with id = " + id);
-        }
         model.addAttribute("book", book);
         return "editBookForm";
     }

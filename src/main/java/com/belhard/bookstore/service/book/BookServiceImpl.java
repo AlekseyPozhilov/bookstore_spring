@@ -77,11 +77,8 @@ public class BookServiceImpl implements BookService {
 public void delete(Long id) {
     log.debug("Deleting book: {}", id);
 
-    Optional<Book> bookOptional = bookRepository.findById(id);
-    if (bookOptional.isPresent()) {
-        bookRepository.delete(id);
-    } else {
-        throw new RuntimeException("No book with id = " + id);
+    if (!bookRepository.delete(id)) {
+        throw new RuntimeException("No user with id = " + id);
     }
 
     log.debug("Book deleted: {}", id);

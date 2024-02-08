@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import java.util.List;
 
 
@@ -23,11 +22,8 @@ public class UserCommand {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public String getUser(@PathVariable("id") Long id, Model model) {
+    public String getUser(@PathVariable Long id, Model model) {
         UserDto user = userService.findById(id);
-        if (user == null) {
-            throw new RuntimeException("No user with id = " + id);
-        }
         model.addAttribute("user", user);
         return "user";
     }
@@ -53,9 +49,6 @@ public class UserCommand {
     @GetMapping("/edit/{id}")
     public String editUserForm(@PathVariable("id") Long id, Model model) {
         UserDto user = userService.findById(id);
-        if (user == null) {
-            throw new RuntimeException("No user with id = " + id);
-        }
         model.addAttribute("user", user);
         return "editUserForm";
     }
